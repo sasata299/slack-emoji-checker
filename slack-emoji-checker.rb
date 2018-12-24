@@ -42,6 +42,6 @@ client.conversations_list(types: 'public_channel,private_channel', limit: 500).c
 end
 
 reaction_counts.sort { |(k1,v1),(k2,v2)| v2 <=> v1 }.each_with_index do |(k,v), i|
-  p "#{i+1}: #{k}"
+  puts "#{i+1}: #{k} (#{v})"
   exit if i >= 20
 end
