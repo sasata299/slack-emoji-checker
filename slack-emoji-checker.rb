@@ -44,6 +44,6 @@ client.conversations_list(types: 'public_channel,private_channel', exclude_archi
 end
 
 reaction_counts.sort { |(k1,v1),(k2,v2)| v2 <=> v1 }.each_with_index do |(k,v), i|
-  exit if i >= 19
-  puts "#{v} :#{k}:"
+  exit if i >= 10
+  puts "#{i+1}位 :#{k}:"
 end
