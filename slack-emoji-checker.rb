@@ -9,17 +9,18 @@ reaction_counts = Hash.new { |h,k| h[k] = 0 }
 
 client = Slack::Web::Client.new
 
-client.conversations_list(types: 'public_channel,private_channel', limit: 500).channels.each do |channel|
+client.conversations_list(types: 'public_channel,private_channel', limit: 1000).channels.each do |channel|
   next unless channel.name == ENV['TARGET_CHANNEL']
   p channel.name
 
-  history = client.conversations_history(channel: channel.id, count: 3)
+  history = client.conversations_history(channel: channel.id, count: 1000)
   history.messages.each do |message|
-    p message.text
+    #p message.text
 
     # メッセージにリアクションがあればカウントする
     if message.reactions
       message.reactions.each do |reaction|
+        reaction.name.sub!(/::skin-tone-\d/, '')
         reaction_counts[reaction.name] += 1
       end
     end
@@ -33,6 +34,7 @@ client.conversations_list(types: 'public_channel,private_channel', limit: 500).c
 
         if message.reactions
           message.reactions.each do |reaction|
+            reaction.name.sub!(/::skin-tone-\d/, '')
             reaction_counts[reaction.name] += 1
           end
         end
@@ -42,6 +44,6 @@ client.conversations_list(types: 'public_channel,private_channel', limit: 500).c
 end
 
 reaction_counts.sort { |(k1,v1),(k2,v2)| v2 <=> v1 }.each_with_index do |(k,v), i|
-  puts "#{i+1}: #{k} (#{v})"
-  exit if i >= 20
+  exit if i >= 19
+  puts "#{v} :#{k}:"
 end
