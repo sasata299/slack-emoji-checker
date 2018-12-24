@@ -9,7 +9,7 @@ reaction_counts = Hash.new { |h,k| h[k] = 0 }
 
 client = Slack::Web::Client.new
 
-client.conversations_list(types: 'public_channel,private_channel', limit: 1000).channels.each do |channel|
+client.conversations_list(types: 'public_channel,private_channel', exclude_archived: true,  limit: 1000).channels.each do |channel|
   next unless channel.name == ENV['TARGET_CHANNEL']
   p channel.name
 
