@@ -17,9 +17,25 @@ client.conversations_list(types: 'public_channel,private_channel', limit: 500).c
   history.messages.each do |message|
     p message.text
 
+    # メッセージにリアクションがあればカウントする
     if message.reactions
       message.reactions.each do |reaction|
         reaction_counts[reaction.name] += 1
+      end
+    end
+
+    # メッセージがスレッドであれば、スレッドを取得する
+    # スレッド内のメッセージににリアクションがあればカウントする
+    if message.reply_count
+      thread = client.conversations_replies(channel: channel.id, ts: message.ts, limit: 20)
+      thread.messages.each do |message|
+        next if message.ts == message.thread_ts
+
+        if message.reactions
+          message.reactions.each do |reaction|
+            reaction_counts[reaction.name] += 1
+          end
+        end
       end
     end
   end
